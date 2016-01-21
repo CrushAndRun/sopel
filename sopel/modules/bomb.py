@@ -13,7 +13,7 @@ import time
 
 colors = ['Red', 'Yellow', 'Blue', 'White', 'Black', 'Purple', 'Orange', 'Green']
 sch = sched.scheduler(time.time, time.sleep)
-fuse = 120  # seconds
+fuse = 60  # seconds
 bombs = dict()
 
 
