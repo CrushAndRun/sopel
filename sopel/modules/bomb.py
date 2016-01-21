@@ -11,9 +11,9 @@ from re import search
 import sched
 import time
 
-colors = ['Red', 'Yellow', 'Blue', 'White', 'Black']
+colors = ['Red', 'Yellow', 'Blue', 'White', 'Black', 'Purple', 'Orange', 'Green']
 sch = sched.scheduler(time.time, time.sleep)
-fuse = 120  # seconds
+fuse = 60  # seconds
 bombs = dict()
 
 
@@ -36,9 +36,9 @@ def start(bot, trigger):
     if target in bot.config.other_bots or target == bot.nick:
         return
     if target in bombs:
-        bot.say('I can\'t fit another bomb in ' + target + '\'s pants!')
+        bot.say('Must be a banana in ' + target + '\'s pants, I can\'t fit another bomb in there!')
         return
-    message = 'Hey, ' + target + '! Don\'t look but, I think there\'s a bomb in your pants. 2 minute timer, 5 wires: Red, Yellow, Blue, White and Black. Which wire should I cut? Don\'t worry, I know what I\'m doing! (respond with .cutwire color)'
+    message = 'Hey, ' + target + '! Don\'t look but, someone put a bomb in your pants...Good luck! 1 minute timer, 8 wires: Red, Yellow, Blue, White, Black, Purple, Orange and Green. Which wire should I cut? Don\'t worry, I know what I\'m doing! (respond with .cutwire color)'
     bot.say(message)
     color = choice(colors)
     bot.msg(trigger.nick,
@@ -69,18 +69,18 @@ def cutwire(bot, trigger):
         bot.say('I can\'t seem to find that wire, ' + target + '! You sure you\'re picking the right one? It\'s not here!')
         bombs[target.lower()] = (color, code)  # Add the target back onto the bomb list,
     elif wirecut.capitalize() == color:
-        bot.say('You did it, ' + target + '! I\'ll be honest, I thought you were dead. But nope, you did it. You picked the right one. Well done.')
+        bot.say('You did it, ' + target + '! PHEW! Good job, you cut the right wire!')
         sch.cancel(code)  # defuse bomb
     else:
         sch.cancel(code)  # defuse timer, execute premature detonation
         kmsg = 'KICK ' + trigger.sender + ' ' + target + \
-               ' : No! No, that\'s the wrong one. Aww, you\'ve gone and killed yourself. Oh, that\'s... that\'s not good. No good at all, really. Wow. Sorry. (You should\'ve picked the ' + color + ' wire.)'
+               ' : No No No, that\'s the wrong one!!1 Got yourself blown up proper, lol. (You should\'ve picked the ' + color + ' wire.)'
         bot.write([kmsg])
 
 
 def explode(bot, trigger):
     target = trigger.group(1)
     kmsg = 'KICK ' + trigger.sender + ' ' + target + \
-           ' : Oh, come on, ' + target + '! You could\'ve at least picked one! Now you\'re dead. Guts, all over the place. You see that? Guts, all over YourPants. (You should\'ve picked the ' + bombs[target.lower()][0] + ' wire.)'
+           ' : Oh, come on, ' + target + '! You could\'ve at least picked one! Now you\'re dead. (You should\'ve picked the ' + bombs[target.lower()][0] + ' wire.)'
     bot.write([kmsg])
     bombs.pop(target.lower())
