@@ -27,8 +27,8 @@ def start(bot, trigger):
         return
 
     if not trigger.sender.startswith('#') or \
-       (trigger.nick not in bot.ops[trigger.sender] and
-       trigger.nick not in bot.halfplus[trigger.sender]):
+       (trigger.nick not in bot.ops and
+       trigger.nick not in bot.halfplus):
         return
     global bombs
     global sch
