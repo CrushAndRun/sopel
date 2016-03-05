@@ -11,5 +11,5 @@ def rekt(bot, trigger):
     notrektstring = u'\u2610 not rekt'
     rektstring = u'\u2611' + rektselection
 
-    bot.say(notrektstring) (rektstring)
+    bot.say(notrektstring), (rektstring)
 #    bot.say(rektstring)
