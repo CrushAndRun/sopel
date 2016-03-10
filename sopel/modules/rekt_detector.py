@@ -9,7 +9,7 @@ def rekt(bot, trigger):
     rektselection = random.choice(rektlist)
 
     notrektstring = u'\u2610 not rekt'
-    rektstring = u'\u2611' + rektselection
+    rektstring = u'\u2611 ' + rektselection
 
     bot.say(notrektstring)
     bot.say(rektstring)
