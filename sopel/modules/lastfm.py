@@ -76,7 +76,7 @@ def lastfm(bot, trigger):
 
     trackinfo = get_np_info(username)
     if not trackinfo:
-        bot.reply("Couldn't find user.")
+        bot.reply("Couldn't that find user.")
         return
 
     output = generate_np_output(trackinfo)
