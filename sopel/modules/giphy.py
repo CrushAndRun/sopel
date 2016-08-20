@@ -9,6 +9,8 @@ import urllib
 import re
 import random
 
+#https://github.com/Giphy/GiphyAPI
+
 @commands('giphy')
 @example('.giphy cat')
 def giphy(bot, trigger):
