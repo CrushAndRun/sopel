@@ -17,7 +17,7 @@ import sopel.web
 import sopel.tools
 
 wait_time = 24 * 60 * 60  # check once per day
-startup_check_run = False
+startup_check_run = True
 version_url = 'http://sopel.chat/latest.json'
 message = (
     'A new Sopel version, {}, is available. I am running {}. Please update '
