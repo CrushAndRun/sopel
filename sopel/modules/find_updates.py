@@ -9,11 +9,9 @@ Sopel website.
 # Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals, absolute_import, print_function, division
 
-import json
-
 import sopel
 import sopel.module
-import sopel.web
+import requests
 import sopel.tools
 
 wait_time = 24 * 60 * 60  # check once per day
@@ -42,7 +40,9 @@ def startup_version_check(bot, trigger):
 def check_version(bot):
     version = sopel.version_info
 
-    info = json.loads(sopel.web.get(version_url))
+    # TODO: Python3 specific. Disable urllib warning from config file.
+    # requests.packages.urllib3.disable_warnings()
+    info = requests.get(version_url, verify=bot.config.core.verify_ssl).json()
     if version.releaselevel == 'final':
         latest = info['version']
         notes = info['release_notes']

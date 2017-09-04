@@ -134,7 +134,7 @@ class Sopel(irc.Bot):
         # Default to empty
         if not self.config.core.nick_blocks:
             self.config.core.nick_blocks = []
-        if not self.config.core.nick_blocks:
+        if not self.config.core.host_blocks:
             self.config.core.host_blocks = []
         self.setup()
 
@@ -221,7 +221,7 @@ class Sopel(irc.Bot):
                 and obj in self.shutdown_methods):
             self.shutdown_methods.remove(obj)
 
-    def register(self, callables, jobs, shutdowns):
+    def register(self, callables, jobs, shutdowns, urls):
         self.shutdown_methods = shutdowns
         for callbl in callables:
             for rule in callbl.rule:
@@ -238,6 +238,11 @@ class Sopel(irc.Bot):
             for interval in func.interval:
                 job = sopel.tools.jobs.Job(interval, func)
                 self.scheduler.add_job(job)
+
+        if not self.memory.contains('url_callbacks'):
+            self.memory['url_callbacks'] = tools.SopelMemory()
+        for func in urls:
+            self.memory['url_callbacks'][func.url_regex] = func
 
     def part(self, channel, msg=None):
         """Part a channel."""
@@ -311,8 +316,8 @@ class Sopel(irc.Bot):
             elif self.stack[recipient_id]:
                 elapsed = time.time() - self.stack[recipient_id][-1][0]
                 if elapsed < 3:
-                    penalty = float(max(0, len(text) - 50)) / 70
-                    wait = 0.7 + penalty
+                    penalty = float(max(0, len(text) - 40)) / 70
+                    wait = 0.8 + penalty
                     if elapsed < wait:
                         time.sleep(wait - elapsed)
 
@@ -420,22 +425,46 @@ class Sopel(irc.Bot):
 
     def call(self, func, sopel, trigger):
         nick = trigger.nick
+        current_time = time.time()
         if nick not in self._times:
             self._times[nick] = dict()
+        if self.nick not in self._times:
+            self._times[self.nick] = dict()
+        if not trigger.is_privmsg and trigger.sender not in self._times:
+            self._times[trigger.sender] = dict()
 
-        if not trigger.admin and \
-                not func.unblockable and \
-                func.rate > 0 and \
-                func in self._times[nick]:
-            timediff = time.time() - self._times[nick][func]
-            if timediff < func.rate:
-                self._times[nick][func] = time.time()
-                LOGGER.info(
-                    "%s prevented from using %s in %s: %d < %d",
-                    trigger.nick, func.__name__, trigger.sender, timediff,
-                    func.rate
-                )
-                return
+        if not trigger.admin and not func.unblockable:
+            if func in self._times[nick]:
+                usertimediff = current_time - self._times[nick][func]
+                if func.rate > 0 and usertimediff < func.rate:
+                    #self._times[nick][func] = current_time
+                    LOGGER.info(
+                        "%s prevented from using %s in %s due to user limit: %d < %d",
+                        trigger.nick, func.__name__, trigger.sender, usertimediff,
+                        func.rate
+                    )
+                    return
+            if func in self._times[self.nick]:
+                globaltimediff = current_time - self._times[self.nick][func]
+                if func.global_rate > 0 and globaltimediff < func.global_rate:
+                    #self._times[self.nick][func] = current_time
+                    LOGGER.info(
+                        "%s prevented from using %s in %s due to global limit: %d < %d",
+                        trigger.nick, func.__name__, trigger.sender, globaltimediff,
+                        func.global_rate
+                    )
+                    return
+
+            if not trigger.is_privmsg and func in self._times[trigger.sender]:
+                chantimediff = current_time - self._times[trigger.sender][func]
+                if func.channel_rate > 0 and chantimediff < func.channel_rate:
+                    #self._times[trigger.sender][func] = current_time
+                    LOGGER.info(
+                        "%s prevented from using %s in %s due to channel limit: %d < %d",
+                        trigger.nick, func.__name__, trigger.sender, chantimediff,
+                        func.channel_rate
+                    )
+                    return
 
         try:
             exit_code = func(sopel, trigger)
@@ -444,7 +473,10 @@ class Sopel(irc.Bot):
             self.error(trigger)
 
         if exit_code != NOLIMIT:
-            self._times[nick][func] = time.time()
+            self._times[nick][func] = current_time
+            self._times[self.nick][func] = current_time
+            if not trigger.is_privmsg:
+                self._times[trigger.sender][func] = current_time
 
     def dispatch(self, pretrigger):
         args = pretrigger.args

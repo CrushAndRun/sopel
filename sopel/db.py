@@ -52,7 +52,7 @@ class SopelDB(object):
 
     def connect(self):
         """Return a raw database connection object."""
-        return sqlite3.connect(self.filename)
+        return sqlite3.connect(self.filename, timeout=10)
 
     def execute(self, *args, **kwargs):
         """Execute an arbitrary SQL query against the database.
@@ -174,7 +174,7 @@ class SopelDB(object):
         nick_id = self.get_nick_id(alias, False)
         count = self.execute('SELECT COUNT(*) FROM nicknames WHERE nick_id = ?',
                              [nick_id]).fetchone()[0]
-        if count == 0:
+        if count <= 1:
             raise ValueError('Given alias is the only entry in its group.')
         self.execute('DELETE FROM nicknames WHERE slug = ?', [alias.lower()])
 

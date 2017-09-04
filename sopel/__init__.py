@@ -11,21 +11,25 @@
 # Licensed under the Eiffel Forum License 2.
 
 from __future__ import unicode_literals, absolute_import, print_function, division
-import os
+import locale
 import sys
-if hasattr(os, "getenv") and os.getenv("LC_ALL") == "C":
-    print('WARNING!!! LC_ALL is set to "C", which makes Python do stupid '
-          'things. If you get strange errors, please unset it, or set it to '
-          'something like "en_US.UTF-8".', file=sys.stderr)
+loc = locale.getlocale()
+if sys.version_info.major > 2:
+    if not loc[1] or 'UTF-8' not in loc[1]:
+        print('WARNING!!! You are running with a non-UTF8 locale environment '
+              'variables (e.g. LC_ALL is set to "C"), which makes Python 3 do '
+              'stupid things. If you get strange errors, please set it to '
+              'something like "en_US.UTF-8".', file=sys.stderr)
 
 
 from collections import namedtuple
+import os
 import re
 import time
 import traceback
 import signal
 
-__version__ = '6.2.1'
+__version__ = '6.5.0'
 
 
 def _version_info(version=__version__):
@@ -52,7 +56,6 @@ version_info = _version_info()
 
 def run(config, pid_file, daemon=False):
     import sopel.bot as bot
-    import sopel.web as web
     import sopel.logger
     from sopel.tools import stderr
     delay = 20
@@ -60,7 +63,6 @@ def run(config, pid_file, daemon=False):
     if not config.core.ca_certs:
         stderr('Could not open CA certificates file. SSL will not '
                'work properly.')
-    web.ca_certs = config.core.ca_certs
 
     def signal_handler(sig, frame):
         if sig == signal.SIGUSR1 or sig == signal.SIGTERM:
