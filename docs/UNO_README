@@ -26,6 +26,9 @@ W = Wild: Allows a player to change the color to Red, Green, Yellow, or Blue.
 WD4 = Wild Draw 4: Allows a player to change the color to Red, Green, Yellow, or
 Blue. Forces the next player to draw 4 cards and skips their turn.
 
+The goal of the game is to be the person with the least amount of cards. To win,
+you must be the first to run out of cards.
+
 **********
 Command descriptions:
 **********
