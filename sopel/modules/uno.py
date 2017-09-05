@@ -24,8 +24,8 @@ MINIMUM_HAND_FOR_JOIN = 5
 YES = WIN = STOP = True
 NO = False
 
-COLORS_ON = 1
-COLORS_OFF = 0
+COLORS_ON = 0
+COLORS_OFF = 1
 
 THEME_NONE = 0
 THEME_DARK = 1
@@ -697,7 +697,7 @@ class UnoBot:
                 bot.say(STRINGS['GAINS'] % (winner, score, 'point' if score == 1 else 'points'))
                 self.update_scores(bot, game.players.keys(), winner, score,
                                    (datetime.now() - game.startTime).seconds)
-            except Exception, e:
+            except Exception as e:
                 bot.say("UNO score error: %s" % e)
             del self.games[trigger.sender]
 
@@ -716,7 +716,7 @@ class UnoBot:
             try:
                 with open(self.scoreFile, 'w+') as scorefile:
                     json.dump(scores, scorefile)
-            except Exception, e:
+            except Exception as e:
                 bot.say("Error saving UNO score file: %s" % e)
 
     def get_scores(self, bot):
@@ -731,7 +731,7 @@ class UnoBot:
                     return self.get_scores(bot)
                 except ValueError:
                     bot.say("Something has gone horribly wrong with the UNO scores. Please submit an issue on GitHub.")
-            except IOError, e:
+            except IOError as e:
                 bot.say("Error opening UNO scores: %s" % e)
         return scores
 
@@ -752,7 +752,7 @@ class UnoBot:
                             'points':   int(tokens[3]),
                             'playtime': int(tokens[4]),
                         }
-            except Exception, e:
+            except Exception as e:
                 bot.say("Score conversion error: %s" % e)
                 return
             else:
@@ -760,7 +760,7 @@ class UnoBot:
             try:
                 with open(self.scoreFile, 'w+') as scorefile:
                     json.dump(scores, scorefile)
-            except Exception, e:
+            except Exception as e:
                 bot.say("Error converting UNO score file: %s" % e)
             else:
                 bot.say("Wrote UNO score file in new JSON format.")
@@ -1050,4 +1050,4 @@ def uno_glue(bot, trigger):
 
 
 if __name__ == '__main__':
-    print __doc__.strip()
+    print(__doc__.strip())
