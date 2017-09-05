@@ -1,3 +1,4 @@
+#https://github.com/phixion/sopel-modules
 import requests
 from bs4 import BeautifulSoup
 import sopel
