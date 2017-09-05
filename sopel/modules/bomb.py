@@ -160,7 +160,7 @@ def start(bot, trigger):
     bot.db.set_nick_value(trigger.nick, 'bomb_last_planted', time.time())
 
 
-@commands('cutwire')
+@commands('cutwire', 'cut')
 @example(".cutwire red")
 @require_chanmsg
 def cutwire(bot, trigger):
