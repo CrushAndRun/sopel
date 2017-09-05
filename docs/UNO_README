@@ -1,0 +1,89 @@
+**********
+Game description:
+**********
+
+Uno is a fun and simple card game to play. Each player is dealt 7 cards and 1
+card is laid out on the table. You can only play a card if it matches the face
+value or color of the card.
+
+Examples:
+
+-If a green 2 is on the table, you can play a green card or a card with 2 on it.
+-If a red draw 2 is on the table, you can play a red card or a card with draw 2
+on it.
+
+Card values are 0-9. There are also special cards that can be played.
+
+R = Reverse: Changes the rotation of the player turns.
+S = Skip: Skips the next player.
+D2 = Draw 2: Makes the next player draw 2 cards and skips their turn.
+
+There are 2 wild cards as well. When used, a player can pick another color for
+the next player to use. These are useful if you do not have a card or, in the
+case of draw 4, to get revenge on someone.
+
+W = Wild: Allows a player to change the color to Red, Green, Yellow, or Blue.
+WD4 = Wild Draw 4: Allows a player to change the color to Red, Green, Yellow, or
+Blue. Forces the next player to draw 4 cards and skips their turn.
+
+**********
+Command descriptions:
+**********
+
+"join" - Lets you join a game. This must be said without a trigger character.
+
+"quit - Lets you quit a game. This must be said without a trigger character.
+
+"uno" - Starts the game of uno. Players must say "join" without quotes to join
+or "quit" without quotes to quit.
+
+"unostop" - Stops the current game. You must be the owner of the game or an
+admin on the bot to use this command.
+
+"unokick" - Kicks a player out of the game.
+
+"deal" - Only the owner can use this command. This starts the game after there
+are 2 or more players.
+
+"play" - Play a card from your hand. Syntax is as follows:
+"play <color> <card>" or "play <card> <color>"
+Cards are: 0,1,2,3,4,5,6,7,8,9,R,S,D2.
+Wild cards are: W & WD4.
+Colors are: R,G,B,Y
+Examples: "play g d2", "play b r", "play y 2"
+A color must be chosen in order to play a wild card. It can be any of the 4
+colors. Example: "play y wd4"
+
+"draw" - You can draw 1 card per turn. You should only use this if you do not
+have a card to play.
+
+"pass" - Skip your turn and move on to the next player. You should only use this
+if you cannot play a card after drawing.
+
+"fuck" - An alias for draw. A bit of humor to add to the game.
+
+"cards" - Sends a notice with your current hand.
+
+"counts" - Lets you see how many cards each player has.
+
+"unocolor" - "yes" and "on" will turn mIRC colors on for you. "no" and "off"
+will turn them off and instead display the letter according to the color next to
+the card face.
+
+"unotheme" - Sets your background theme to either "dark", "light" or "default".
+This is useful if you cannot see the colors with your IRC client's background.
+
+"unohelp" - Shows information about the game in some notices.
+
+"unotop" - Shows the top 5 players. This only works if the database is
+configured correctly in the script. SCOREFILE must be writable by the bot.
+
+"unorank" - Shows your rank according to points accumulated in games. You may
+specify another player with this command to see their rank. This only works if
+the database is configured correctly in the script. SCOREFILE must be writable
+by the bot.
+
+"unogames" - Allows an admin to see what games are running or pending in each
+channel.
+
+"unomove" - Allows an admin to move a game to another channel.
