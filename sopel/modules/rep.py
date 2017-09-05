@@ -1,3 +1,4 @@
+#https://github.com/phixion/sopel-modules
 from sopel import module
 from sopel.tools import Identifier
 import time
